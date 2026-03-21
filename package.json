@@ -1,11 +1,28 @@
 {
   "name": "guess-the-melody",
   "productName": "Угадай мелодию",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Игра угадай мелодию на Electron",
   "type": "module",
   "main": "./out/main/index.js",
   "author": "Chults Artsiom",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com"
+  },
+  "build": {
+    "appId": "com.example.app",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ArtsiomChulc",
+        "repo": "GuessTheMelody"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  },
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
@@ -21,7 +38,8 @@
     "build:win": "npm run build && electron-builder --win",
     "package": "electron-vite build && electron-builder",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "release": "dotenv -- electron-builder --publish always"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
@@ -44,6 +62,7 @@
     "@types/styled-components": "^5.1.36",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.27",
+    "dotenv-cli": "^11.0.0",
     "electron": "^39.2.6",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",

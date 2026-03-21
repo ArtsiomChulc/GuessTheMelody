@@ -14,8 +14,30 @@ function checkUpdates(mainWindow: BrowserWindow): void {
   autoUpdater.checkForUpdatesAndNotify()
 
   autoUpdater.on('update-available', () => {
-    // Отправляем сигнал в React, что есть обновление
     mainWindow.webContents.send('update_available')
+  })
+
+  ipcMain.on('start-download', () => {
+    autoUpdater.downloadUpdate()
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'Обновление готово',
+        message: 'Новая версия скачана. Перезапустить приложение для установки?',
+        buttons: ['Перезапустить сейчас', 'Позже']
+      })
+      .then((result) => {
+        if (result.response === 0) {
+          autoUpdater.quitAndInstall()
+        }
+      })
+  })
+
+  autoUpdater.on('error', (err) => {
+    console.error('Ошибка автообновления:', err)
   })
 }
 

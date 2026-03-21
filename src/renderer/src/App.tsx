@@ -180,9 +180,13 @@ export default function App(): JSX.Element {
   const [updateReady, setUpdateReady] = useState(false)
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('update_available', () => {
+    const removeListener = window.electron.ipcRenderer.on('update_available', () => {
       setUpdateReady(true)
     })
+
+    return () => {
+      removeListener()
+    }
   }, [])
 
   useEffect(() => {
