@@ -20,4 +20,4 @@ nsis:
 publish:
   provider: github
   owner: ArtsiomChulc
-  repo: guess-the-melody
+  repo: GuessTheMelody

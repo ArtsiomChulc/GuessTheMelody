@@ -3,7 +3,8 @@ import { is } from '@electron-toolkit/utils'
 import path from 'path'
 import Store from 'electron-store'
 import icon from '../../resources/icon.png?asset'
-import { autoUpdater } from 'electron-updater'
+import pkg from 'electron-updater'
+const { autoUpdater } = pkg
 
 export const store = new Store()
 

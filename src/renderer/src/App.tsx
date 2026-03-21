@@ -6,6 +6,8 @@ import { PlayerModal } from '@renderer/components/playerModal/PlayerModal'
 import { Category, Song, Team } from '@renderer/types/types'
 import { TeamsBar } from '@renderer/components/teamsBar/TeamsBar'
 import { INITIAL_CATEGORIES } from '@renderer/helpers/ininial_state'
+import { ArrowUpCircle, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -100,6 +102,73 @@ const AdminPanelWrapper = styled.div`
   }
 `
 
+const UpdateToast = styled(motion.div)`
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 18rem;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(37, 99, 235, 0.4);
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`
+
+const ToastHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  span {
+    font-weight: 900;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+`
+
+const DownloadBtn = styled.button`
+  background-color: white;
+  color: #1e40af;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    background-color: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`
+
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s;
+
+  &:hover {
+    color: white;
+  }
+`
+
 // --- Logic ---
 
 export default function App(): JSX.Element {
@@ -108,6 +177,13 @@ export default function App(): JSX.Element {
   const [isAdmin, setIsAdmin] = useState(false)
   const [activeSong, setActiveSong] = useState<Song | null>(null)
   const [teams, setTeams] = useState<Team[]>([])
+  const [updateReady, setUpdateReady] = useState(false)
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on('update_available', () => {
+      setUpdateReady(true)
+    })
+  }, [])
 
   useEffect(() => {
     const initStore = async (): Promise<void> => {
@@ -283,6 +359,33 @@ export default function App(): JSX.Element {
           onClose={() => setActiveSong(null)}
         />
       )}
+      <AnimatePresence>
+        {updateReady && (
+          <UpdateToast
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 100, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          >
+            <CloseBtn onClick={() => setUpdateReady(false)}>
+              <X size={16} />
+            </CloseBtn>
+
+            <ToastHeader>
+              <ArrowUpCircle size={20} />
+              <span>Доступно обновление</span>
+            </ToastHeader>
+
+            <p style={{ fontSize: '12px', opacity: 0.9 }}>
+              Вышла версия 1.0.2! Загрузите её сейчас, чтобы получить новые функции.
+            </p>
+
+            <DownloadBtn onClick={() => window.open('https://github.com')}>
+              Скачать и обновить
+            </DownloadBtn>
+          </UpdateToast>
+        )}
+      </AnimatePresence>
     </MainContainer>
   )
 }
