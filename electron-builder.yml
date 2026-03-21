@@ -1,0 +1,23 @@
+appId: com.guess.melody
+productName: GuessTheMelody
+directories:
+  output: dist
+files:
+  - out/**/*
+  - resources/**/*
+  - out/renderer/index.html
+asar: true
+win:
+  target:
+    - nsis
+  icon: resources/icon.ico
+nsis:
+  installerIcon: resources/icon.ico
+  uninstallerIcon: resources/icon.ico
+  shortcutName: "Угадай Мелодию"
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+publish:
+  provider: github
+  owner: ArtsiomChulc
+  repo: guess-the-melody
