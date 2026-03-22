@@ -4,4 +4,6 @@ out
 .DS_Store
 .eslintcache
 *.log*
-.env
+# env files (can opt-in for committing if needed)
+.env*
+.env.local
