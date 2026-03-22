@@ -2,7 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import path from 'path'
 import Store from 'electron-store'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon.ico?asset'
 import pkg from 'electron-updater'
 const { autoUpdater } = pkg
 
